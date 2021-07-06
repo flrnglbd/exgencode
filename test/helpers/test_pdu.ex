@@ -112,6 +112,13 @@ defmodule Exgencode.TestPdu do
     first_sub: [type: :subrecord, default: %SomeSubPdu{}, conditional: :offset_to_first_sub],
     second_sub: [type: :subrecord, default: %SomeSubPdu{}, conditional: :offset_to_first_sub]
 
+  defpdu OffsetSubHeaderPdu,
+    header: [type: :header, default: %SomeSubPdu{}],
+    offset_to_normal_field: [size: 8, offset_to: :normal_field],
+    size_field: [size: 8],
+    variable_field: [type: :variable, size: :size_field],
+    normal_field: [size: 8]
+
   defpdu DoubleOffsetPdu,
     first_offset: [size: 8, offset_to: :second_offset],
     second_offset: [size: 8, offset_to: :field_a, conditional: :first_offset],

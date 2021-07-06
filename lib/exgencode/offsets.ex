@@ -85,6 +85,7 @@ defmodule Exgencode.Offsets do
                 |> Enum.map(&Exgencode.Pdu.sizeof(pdu, &1))
                 |> Enum.map(fn
                   {:subrecord, record} -> Exgencode.Pdu.sizeof_pdu(record, version, :bits)
+                  {:header, _record} -> 0
                   val -> val
                 end)
                 |> Enum.sum()

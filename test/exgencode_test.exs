@@ -473,6 +473,30 @@ defmodule ExgencodeTest do
              )
   end
 
+  test "complex offset pdus with header" do
+    header = %TestPdu.SubPdu{}
+    variable_field = "This is a variable field"
+
+    pdu = %TestPdu.OffsetSubHeaderPdu{
+      header: header,
+      size_field: byte_size(variable_field),
+      variable_field: variable_field,
+      normal_field: 42
+    }
+
+    size_normal_field = 1
+    enc_header = Exgencode.Pdu.encode(header)
+    enc_pdu = Exgencode.Pdu.encode(pdu)
+
+    offset_without_header =
+      byte_size(enc_pdu) - byte_size(enc_header) -
+        size_normal_field
+
+    assert <<1::size(16), offset_without_header::size(8), byte_size(variable_field)::size(8)>> <>
+             variable_field <> <<42::size(8)>> ==
+             Exgencode.Pdu.encode(pdu)
+  end
+
   test "versioned offset pdus" do
     pdu = %TestPdu.VersionedOffsetPdu{
       static_field: 78,
