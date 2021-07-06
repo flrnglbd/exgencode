@@ -8,7 +8,7 @@ defmodule Exgencode do
     def sizeof(pdu, field_name)
     @doc "Returns the size of the pdu for given version."
     @spec sizeof_pdu(Exgencode.pdu(), Version.version() | nil, Exgencode.return_size_type()) ::
-            non_neg_integer | {:subrecord, Exgencode.pdu()}
+            non_neg_integer | {:subrecord, Exgencode.pdu()} | {:header, Exgencode.pdu()}
     def sizeof_pdu(pdu, version, type)
     @doc "Encode the Elixir structure into a binary given the protocol version."
     @spec encode(Exgencode.pdu(), nil | Version.version()) :: binary
@@ -27,7 +27,15 @@ defmodule Exgencode do
   @type pdu_name :: module
   @typedoc "The type of the field."
   @type field_type ::
-          :subrecord | :constant | :string | :binary | :float | :integer | :variable | :skip
+          :header
+          | :subrecord
+          | :constant
+          | :string
+          | :binary
+          | :float
+          | :integer
+          | :variable
+          | :skip
   @typedoc "A custom encoding function that is meant to take the value of the field and return its binary represantion."
   @type field_encode_fun :: (term -> bitstring)
   @typedoc "A custom decoding function that receives the PDU decoded so far and remaining binary and is meant to return PDU with the field decoded and remaining binary."

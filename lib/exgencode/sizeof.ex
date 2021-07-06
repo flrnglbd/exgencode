@@ -46,7 +46,7 @@ defmodule Exgencode.Sizeof do
         fields
         |> Enum.map(fn {field_name, props} ->
           case Exgencode.Pdu.sizeof(pdu, field_name) do
-            {:subrecord, record} ->
+            {type, record} when type in [:subrecord, :header] ->
               Exgencode.Pdu.sizeof_pdu(record, version)
 
             val ->
@@ -75,9 +75,9 @@ defmodule Exgencode.Sizeof do
       :virtual ->
         {name, props, 0}
 
-      :subrecord ->
+      type when type in [:subrecord, :header] ->
         {name, props,
-         {:subrecord,
+         {type,
           quote do
             (fn %{unquote(name) => val} -> val end).(pdu)
           end}}

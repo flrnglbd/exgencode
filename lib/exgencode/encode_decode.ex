@@ -52,6 +52,10 @@ defmodule Exgencode.EncodeDecode do
     wrap_conditional_encode(props, basic_fun)
   end
 
+  def create_encode_fun(:header, field_name, props) do
+    create_encode_fun(:subrecord, field_name, props)
+  end
+
   def create_encode_fun(:virtual, _field_name, _props) do
     quote do: fn _ -> <<>> end
   end
@@ -191,6 +195,10 @@ defmodule Exgencode.EncodeDecode do
       end
 
     wrap_conditional_decode(props, basic_fun)
+  end
+
+  def create_decode_fun(:header, field_name, props) do
+    create_decode_fun(:subrecord, field_name, props)
   end
 
   def create_decode_fun(:virtual, field_name, props) do
